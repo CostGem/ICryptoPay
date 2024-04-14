@@ -1,39 +1,41 @@
 import asyncio
 import ssl
+from asyncio import AbstractEventLoop
 from typing import Optional
 
 import certifi
 from aiohttp import ClientSession, TCPConnector
 from aiohttp.typedefs import StrOrURL
 
+from enums.http import HTTPMethod
+from enums.method import APIMethod
 from .exceptions import CryptoPayAPIError
 
 
 class BaseClient:
     """Base aiohttp client"""
 
-    def __init__(self) -> None:
-        """
-        Set defaults on object init.
-            By default `self._session` is None.
-            It will be created on a first API request.
-            The second request will use the same `self._session`.
-        """
-        self._loop = asyncio.get_event_loop()
-        self._session: Optional[ClientSession] = None
+    __session: Optional[ClientSession] = None
+    __loop: Optional[AbstractEventLoop] = None
 
-    def get_session(self, **kwargs):
-        """Get cached session. One session per instance."""
+    def __init__(self) -> None:
+        self._loop = asyncio.get_event_loop()
+        self._session = None
+
+    def get_session(self, **kwargs) -> ClientSession:
+        """Get cached session. One session per instance"""
+
         if isinstance(self._session, ClientSession) and not self._session.closed:
             return self._session
 
-        ssl_context = ssl.create_default_context(cafile=certifi.where())
-        connector = TCPConnector(ssl=ssl_context)
+        ssl_context: ssl.SSLContext = ssl.create_default_context(cafile=certifi.where())
+        connector: TCPConnector = TCPConnector(ssl=ssl_context)
 
         self._session = ClientSession(connector=connector, **kwargs)
+
         return self._session
 
-    async def _make_request(self, method: str, url: StrOrURL, **kwargs) -> dict:
+    async def _make_request(self, url: StrOrURL, method: str = HTTPMethod.GET, **kwargs) -> dict:
         """
         Make a request.
             :param method: HTTP Method
@@ -41,15 +43,18 @@ class BaseClient:
             :param kwargs: data, params, json and other...
             :return: status and result or exception
         """
-        session = self.get_session()
 
-        async with session.request(method, url, **kwargs) as response:
+        session: ClientSession = self.get_session()
+
+        async with session.request(method=method, url=url, **kwargs) as response:
             response = await response.json(content_type="application/json")
+
         return self._validate_response(response)
 
     @staticmethod
     def _validate_response(response: dict) -> dict:
         """Validate response"""
+
         if not response.get("ok"):
             name = response["error"]["name"]
             code = response["error"]["code"]

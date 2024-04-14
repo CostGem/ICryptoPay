@@ -1,20 +1,33 @@
 from pydantic import BaseModel
 
-from typing import Union, Optional, List
+from typing import Union, Optional, List, Literal
 from datetime import datetime
 
-from ..const import Assets, PaidButtons, InvoiceStatus, CurrencyType
+from enums.button import PaidButton
+from enums.asset import Asset
+from enums.currency import CurrencyType
+from enums.fiat import FiatType
+from enums.invoice import InvoiceStatus
 
 
 class Invoice(BaseModel):
     invoice_id: int
-    status: Union[InvoiceStatus, str]
     hash: str
-    asset: Optional[Union[Assets, str]] = None
-    amount: Union[int, float]
+    currency_type: Union[CurrencyType, Literal["crypto", "fiat"]]
+    asset: Optional[Union[Asset, str]] = None
+    fiat: Optional[Union[FiatType, str]] = None
+    amount: Union[int, float, str]
+    paid_asset: Optional[Union[Asset, str]] = None
+    paid_amount: Optional[Union[int, float]] = None
+    paid_fiat_rate: Optional[str] = None
+    accepted_assets: Optional[List[Union[Asset, str]]] = None
+    fee_asset: Optional[Union[Asset, str]] = None
+    fee_amount: Optional[Union[int, float]] = None
     bot_invoice_url: str
     description: Optional[str] = None
-    created_at: datetime
+    status: Union[InvoiceStatus, str]
+    created_at: str
+    paid_usd_rate: Optional[Union[int, float]] = None
     allow_comments: bool
     allow_anonymous: bool
     expiration_date: Optional[str] = None
@@ -23,13 +36,5 @@ class Invoice(BaseModel):
     comment: Optional[str] = None
     hidden_message: Optional[str] = None
     payload: Optional[str] = None
-    paid_btn_name: Optional[Union[PaidButtons, str]] = None
+    paid_btn_name: Optional[Union[PaidButton, str]] = None
     paid_btn_url: Optional[str] = None
-    currency_type: Union[CurrencyType, str]
-    fiat: Optional[str] = None
-    paid_asset: Optional[Union[Assets, str]] = None
-    paid_amount: Optional[Union[int, float]] = None
-    paid_usd_rate: Optional[Union[int, float]] = None
-    fee_asset: Optional[Union[Assets, str]] = None
-    fee_amount: Optional[Union[int, float]] = None
-    accepted_assets: Optional[Union[List[Union[Assets, str]], str]] = None

@@ -12,7 +12,9 @@ keywords = [
     "cryptobot",
     "cryptopay",
     "cryptopay api",
-    "cryptobot api"
+    "cryptobot api",
+    "crypto api",
+    "api"
 ]
 
 [tool.poetry.dependencies]
