@@ -1,9 +1,9 @@
+from typing import Union
+
 from pydantic import BaseModel
 
-from typing import Union, Optional
-
-from enums.asset import Asset
-from enums.fiat import FiatType
+from icryptopay.enums.asset import Asset
+from icryptopay.enums.fiat import FiatType
 
 
 class ExchangeRate(BaseModel):

@@ -3,7 +3,7 @@ from pydantic import BaseModel
 from typing import Union, Optional
 from datetime import datetime
 
-from enums.asset import Asset
+from icryptopay.enums.asset import Asset
 
 
 class Transfer(BaseModel):

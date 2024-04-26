@@ -3,32 +3,33 @@ from hashlib import sha256
 from hmac import HMAC
 from typing import Optional, Union, List, Callable, Dict, Any
 
-from aiohttp.web import Response
-from aiohttp.web_request import Request
+from fastapi.openapi.models import Response
+from starlette.requests import Request
+from starlette.responses import JSONResponse
 
-from aiocryptopay.base import BaseClient
-from aiocryptopay.enums.check import CheckStatus
-from aiocryptopay.enums.asset import Asset
-from aiocryptopay.enums.currency import CurrencyType
-from aiocryptopay.enums.http import HTTPMethod
-from aiocryptopay.enums.invoice import InvoiceStatus
-from aiocryptopay.enums.network import NetworkType
-from aiocryptopay.models.app_stats import AppStats
-from aiocryptopay.models.balance import Balance
-from aiocryptopay.models.check import Check
-from aiocryptopay.models.currencies import Currency
-from aiocryptopay.models.invoice import Invoice
-from aiocryptopay.models.profile import Profile
-from aiocryptopay.models.rates import ExchangeRate
-from aiocryptopay.models.transfer import Transfer
-from aiocryptopay.models.update import Update
-from aiocryptopay.utils.exchange import get_rate, get_rate_summ
-from enums.button import PaidButton
-from enums.method import APIMethod
+from icryptopay.enums.button import PaidButton
+from icryptopay.enums.method import APIMethod
+from icryptopay.base import BaseClient
+from icryptopay.enums.asset import Asset
+from icryptopay.enums.check import CheckStatus
+from icryptopay.enums.currency import CurrencyType
+from icryptopay.enums.http import HTTPMethod
+from icryptopay.enums.invoice import InvoiceStatus
+from icryptopay.enums.network import NetworkType
+from icryptopay.models.app_stats import AppStats
+from icryptopay.models.balance import Balance
+from icryptopay.models.check import Check
+from icryptopay.models.currencies import Currency
+from icryptopay.models.invoice import Invoice
+from icryptopay.models.profile import Profile
+from icryptopay.models.rates import ExchangeRate
+from icryptopay.models.transfer import Transfer
+from icryptopay.models.update import Update
+from icryptopay.utils.exchange import get_rate, get_rate_summ
 
 
-class AioCryptoPay(BaseClient):
-    """CryptoPay API client"""
+class ICryptoPay(BaseClient):
+    """ICryptoPay API client"""
 
     __network: NetworkType = NetworkType.MAIN
     __headers: Dict[str, Any] = {}
@@ -65,6 +66,7 @@ class AioCryptoPay(BaseClient):
             url=self._build_request_url(method=APIMethod.GET_ME),
             headers=self.__headers
         )
+
         return Profile(**response["result"])
 
     async def get_stats(
@@ -75,6 +77,9 @@ class AioCryptoPay(BaseClient):
         """
         Use this method to get app statistics.
         http://help.crypt.bot/crypto-pay-api#jvP3
+
+        :param start_at: Start date
+        :param end_at: End date
         """
 
         params: Dict[str, Optional[Union[datetime, str]]] = {
@@ -158,6 +163,20 @@ class AioCryptoPay(BaseClient):
         """
         Use this method to create a new invoice.
         https://help.crypt.bot/crypto-pay-api#createInvoice
+
+        :param amount: Invoice amount
+        :param asset: Invoice asset
+        :param description: Invoice description
+        :param hidden_message: Invoice hidden message
+        :param paid_btn_name: Paid button name
+        :param paid_btn_url: Paid button URL
+        :param payload: Invoice payload
+        :param allow_comments: Allow comments
+        :param allow_anonymous: Allow anonymous comments
+        :param expires_in: Invoice expiration time
+        :param fiat: Fiat currency
+        :param currency_type: Currency type
+        :param accepted_asset: Accepted asset
         """
 
         if accepted_asset and isinstance(accepted_asset, list):
@@ -182,7 +201,7 @@ class AioCryptoPay(BaseClient):
         for key, value in params.copy().items():
             if isinstance(value, bool):
                 params[key] = str(value).lower()
-            if value is None:
+            if not value:
                 del params[key]
 
         response = await self._make_request(
@@ -205,6 +224,12 @@ class AioCryptoPay(BaseClient):
         """
         Use this method to get invoices of your app.
         https://help.crypt.bot/crypto-pay-api#getInvoices
+
+        :param asset: Asset
+        :param invoice_ids: List of invoice IDs
+        :param status: Status
+        :param offset: Offset
+        :param count: Count
         """
 
         if invoice_ids and isinstance(invoice_ids, list):
@@ -215,11 +240,11 @@ class AioCryptoPay(BaseClient):
             "invoice_ids": invoice_ids,
             "status": status,
             "offset": offset,
-            "count": count,
+            "count": count
         }
 
         for key, value in params.copy().items():
-            if value is None:
+            if not value:
                 del params[key]
 
         response = await self._make_request(
@@ -229,11 +254,7 @@ class AioCryptoPay(BaseClient):
             headers=self.__headers
         )
 
-        if len(response["result"]["items"]) > 0:
-            if invoice_ids and isinstance(invoice_ids, int):
-                return Invoice(**response["result"]["items"][0])
-
-            return [Invoice(**invoice) for invoice in response["result"]["items"]]
+        return [Invoice(**invoice) for invoice in response["result"]["items"]]
 
     async def delete_invoice(self, invoice_id: int) -> bool:
         """
@@ -264,6 +285,13 @@ class AioCryptoPay(BaseClient):
         """
         Use this method to send coins from your app's balance to a user.
         https://help.crypt.bot/crypto-pay-api#transfer
+
+        :param user_id: User ID
+        :param asset: Asset
+        :param amount: Amount
+        :param spend_id: Spend ID
+        :param comment: Comment
+        :param disable_send_notification: Disable send notification
         """
 
         params: Dict[str, Union[str, int, float]] = {
@@ -278,7 +306,7 @@ class AioCryptoPay(BaseClient):
         for key, value in params.copy().items():
             if isinstance(value, bool):
                 params[key] = str(value).lower()
-            if value is None:
+            if not value:
                 del params[key]
 
         response = await self._make_request(
@@ -300,6 +328,11 @@ class AioCryptoPay(BaseClient):
         """
         Use this method to get transfers created by your app.
         http://help.crypt.bot/crypto-pay-api#RjDU
+
+        :param asset: Asset
+        :param transfer_ids: List of transfer IDs
+        :param offset: Offset
+        :param count: Count
         """
 
         if transfer_ids and isinstance(transfer_ids, list):
@@ -313,7 +346,7 @@ class AioCryptoPay(BaseClient):
         }
 
         for key, value in params.copy().items():
-            if value is None:
+            if not value:
                 del params[key]
 
         response = await self._make_request(
@@ -335,6 +368,11 @@ class AioCryptoPay(BaseClient):
         """
         Use this method to create a new check.
         http://help.crypt.bot/crypto-pay-api#ZU9K
+
+        :param asset: Asset
+        :param amount: Amount
+        :param pin_to_user_id: Pin to user ID
+        :param pin_to_username: Pin to username
         """
 
         params: Dict[str, Union[str, int, float]] = {
@@ -368,6 +406,12 @@ class AioCryptoPay(BaseClient):
         """
         Use this method to get checks created by your app
         http://help.crypt.bot/crypto-pay-api#nIwG
+
+        :param asset: Asset
+        :param check_ids: List of check IDs
+        :param status: Status
+        :param offset: Offset
+        :param count: Count
         """
 
         if check_ids and isinstance(check_ids, list):
@@ -382,7 +426,7 @@ class AioCryptoPay(BaseClient):
         }
 
         for key, value in params.copy().items():
-            if value is None:
+            if not value:
                 del params[key]
 
         response = await self._make_request(
@@ -398,6 +442,8 @@ class AioCryptoPay(BaseClient):
         """
         Use this method to delete checks created by your app.
         http://help.crypt.bot/crypto-pay-api#nd2L
+
+        :param check_id: Check ID
         """
 
         response = await self._make_request(
@@ -410,7 +456,13 @@ class AioCryptoPay(BaseClient):
         return response["result"]
 
     def verified_signature(self, body_text: str, crypto_pay_signature: str) -> bool:
-        """https://help.crypt.bot/crypto-pay-api#verifying-webhook-updates"""
+        """
+        Check the signature for webhook updates
+        https://help.crypt.bot/crypto-pay-api#verifying-webhook-updates
+
+        :param body_text: Body text
+        :param crypto_pay_signature: Crypto-Pay-Api-Signature header
+        """
 
         token: bytes = sha256(string=self.__token.encode("UTF-8")).digest()
         signature: str = HMAC(
@@ -421,11 +473,11 @@ class AioCryptoPay(BaseClient):
 
         return signature == crypto_pay_signature
 
-    async def get_updates(self, request: Request) -> Response:
+    async def get_updates(self, request: Request) -> JSONResponse:
         """WebHook updates route"""
 
         body = await request.json()
-        body_text: str = await request.text()
+        body_text: str = (await request.body()).decode("UTF-8")
         crypto_pay_signature: str = request.headers.get("Crypto-Pay-Api-Signature", "No value")
         signature: bool = self.verified_signature(
             body_text=body_text,
@@ -434,12 +486,15 @@ class AioCryptoPay(BaseClient):
 
         if signature:
             for handler in self.__handlers:
-                await handler(Update(**body), request.app)
+                await handler(Update(**body))
 
-            return Response(text="Status OK!")
+            return JSONResponse(content={"msg": "Status OK!"})
 
     async def get_amount_by_fiat(
-            self, summ: Union[int, float], asset: Union[Asset, str], target: str
+            self,
+            summ: Union[int, float],
+            asset: Union[Asset, str],
+            target: str
     ) -> Union[int, float]:
         """Get amount in crypto by fiat summ"""
 

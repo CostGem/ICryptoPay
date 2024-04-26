@@ -3,8 +3,8 @@ from pydantic import BaseModel
 from typing import Union
 from datetime import datetime
 
-from enums.check import CheckStatus
-from enums.asset import Asset
+from icryptopay.enums.check import CheckStatus
+from icryptopay.enums.asset import Asset
 
 
 class Check(BaseModel):

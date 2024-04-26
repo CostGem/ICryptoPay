@@ -7,9 +7,8 @@ import certifi
 from aiohttp import ClientSession, TCPConnector
 from aiohttp.typedefs import StrOrURL
 
-from enums.http import HTTPMethod
-from enums.method import APIMethod
-from .exceptions import CryptoPayAPIError
+from icryptopay.enums.http import HTTPMethod
+from icryptopay.exceptions import CryptoPayAPIError
 
 
 class BaseClient:
@@ -63,6 +62,7 @@ class BaseClient:
 
     async def close(self):
         """Close the session graceful."""
+
         if not isinstance(self._session, ClientSession):
             return
 

@@ -1,7 +1,7 @@
 from pydantic import BaseModel
 from datetime import datetime
 
-from .invoice import Invoice
+from icryptopay.models.invoice import Invoice
 
 
 class Update(BaseModel):

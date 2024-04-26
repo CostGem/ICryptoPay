@@ -3,11 +3,11 @@ from pydantic import BaseModel
 from typing import Union, Optional, List, Literal
 from datetime import datetime
 
-from enums.button import PaidButton
-from enums.asset import Asset
-from enums.currency import CurrencyType
-from enums.fiat import FiatType
-from enums.invoice import InvoiceStatus
+from icryptopay.enums.button import PaidButton
+from icryptopay.enums.asset import Asset
+from icryptopay.enums.currency import CurrencyType
+from icryptopay.enums.fiat import FiatType
+from icryptopay.enums.invoice import InvoiceStatus
 
 
 class Invoice(BaseModel):

@@ -2,7 +2,7 @@ from pydantic import BaseModel
 
 from typing import Union
 
-from enums.asset import Asset
+from icryptopay.enums.asset import Asset
 
 
 class Balance(BaseModel):
