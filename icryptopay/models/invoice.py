@@ -23,7 +23,10 @@ class Invoice(BaseModel):
     accepted_assets: Optional[List[Union[Asset, str]]] = None
     fee_asset: Optional[Union[Asset, str]] = None
     fee_amount: Optional[Union[int, float]] = None
+    fee_in_usd: Optional[Union[int, float]] = None
     bot_invoice_url: str
+    mini_app_invoice_url: str
+    web_app_invoice_url: str
     description: Optional[str] = None
     status: Union[InvoiceStatus, str]
     created_at: str

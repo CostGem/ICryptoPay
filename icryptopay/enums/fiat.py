@@ -24,3 +24,5 @@ class FiatType(StrEnum):
     AED: str = "AED"
     PLN: str = "PLN"
     ILS: str = "ILS"
+    KGS: str = "KGS"
+    TJS: str = "TJS"

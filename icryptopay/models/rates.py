@@ -10,6 +10,6 @@ class ExchangeRate(BaseModel):
     is_valid: bool
     is_crypto: bool
     is_fiat: bool
-    source: Union[Asset, str]
-    target: Union[FiatType, str]
+    source: Union[Asset, FiatType]
+    target: FiatType
     rate: Union[float]

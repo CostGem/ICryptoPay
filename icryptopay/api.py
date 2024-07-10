@@ -45,6 +45,12 @@ class ICryptoPay(BaseClient):
 
         self.__headers["Crypto-Pay-API-Token"] = token
 
+    async def __aenter__(self) -> None:
+        return self
+
+    async def __aexit__(self, exc_type, exc, tb) -> None:
+        await self.close()
+
     def _build_request_url(self, method: APIMethod) -> str:
         """
         Returns a URL for the request

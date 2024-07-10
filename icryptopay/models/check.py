@@ -1,6 +1,6 @@
 from pydantic import BaseModel
 
-from typing import Union
+from typing import Union, Optional
 from datetime import datetime
 
 from icryptopay.enums.check import CheckStatus
@@ -15,4 +15,4 @@ class Check(BaseModel):
     bot_check_url: str
     status: Union[CheckStatus, str]
     created_at: datetime
-    activated_at: datetime
+    activated_at: Optional[datetime]

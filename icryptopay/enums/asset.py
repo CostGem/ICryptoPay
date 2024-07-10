@@ -13,6 +13,9 @@ class Asset(StrEnum):
     TRX: str = "TRX"
     LTC: str = "LTC"
     GRAM: str = "GRAM"
+    NOT: str = "NOT"
+    MY: str = "MY"
+    SOL: str = "SOL"
 
     @classmethod
     def values(cls):
