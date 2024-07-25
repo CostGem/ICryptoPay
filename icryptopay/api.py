@@ -207,8 +207,10 @@ class ICryptoPay(BaseClient):
         for key, value in params.copy().items():
             if isinstance(value, bool):
                 params[key] = str(value).lower()
-            if not value:
+            if value is None:
                 del params[key]
+
+        print(params)
 
         response = await self._make_request(
             method=HTTPMethod.GET,
@@ -250,7 +252,7 @@ class ICryptoPay(BaseClient):
         }
 
         for key, value in params.copy().items():
-            if not value:
+            if value is None:
                 del params[key]
 
         response = await self._make_request(
@@ -312,7 +314,7 @@ class ICryptoPay(BaseClient):
         for key, value in params.copy().items():
             if isinstance(value, bool):
                 params[key] = str(value).lower()
-            if not value:
+            if value is None:
                 del params[key]
 
         response = await self._make_request(
@@ -352,7 +354,7 @@ class ICryptoPay(BaseClient):
         }
 
         for key, value in params.copy().items():
-            if not value:
+            if value is None:
                 del params[key]
 
         response = await self._make_request(
@@ -389,7 +391,7 @@ class ICryptoPay(BaseClient):
         }
 
         for key, value in params.copy().items():
-            if not value:
+            if value is None:
                 del params[key]
 
         response = await self._make_request(
@@ -432,7 +434,7 @@ class ICryptoPay(BaseClient):
         }
 
         for key, value in params.copy().items():
-            if not value:
+            if value is None:
                 del params[key]
 
         response = await self._make_request(
