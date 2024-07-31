@@ -153,7 +153,7 @@ class ICryptoPay(BaseClient):
     async def create_invoice(
             self,
             amount: Union[int, float],
-            asset: Optional[Union[Asset, str]] = None,
+            asset: Optional[Union[Asset, str, List[Asset]]] = None,
             description: Optional[str] = None,
             hidden_message: Optional[str] = None,
             paid_btn_name: Optional[Union[PaidButton, str]] = None,
@@ -186,7 +186,7 @@ class ICryptoPay(BaseClient):
         """
 
         if accepted_asset and isinstance(accepted_asset, list):
-            accepted_asset = ",".join(map(str, accepted_asset))
+            accepted_asset = ",".join(asset for asset in accepted_asset)
 
         params: Dict[str, Union[str, int, float, bool]] = {
             "asset": asset,
@@ -201,7 +201,7 @@ class ICryptoPay(BaseClient):
             "expires_in": expires_in,
             "fiat": fiat,
             "currency_type": currency_type,
-            "accepted_Asset": accepted_asset,
+            "accepted_assets": accepted_asset,
         }
 
         for key, value in params.copy().items():
