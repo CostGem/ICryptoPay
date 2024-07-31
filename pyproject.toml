@@ -22,7 +22,7 @@ aiohttp = "^3.8.3"
 certifi = "^2023.5.7"
 strenum = "^0.4.10"
 pydantic = "^2.4.1"
-fastapi = "^0.110.2"
+fastapi = "^0.108.0"
 uvicorn = "^0.25.0"
 
 [tool.poetry.group.dev.dependencies]
