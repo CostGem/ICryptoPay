@@ -15,4 +15,4 @@ class Check(BaseModel):
     bot_check_url: str
     status: Union[CheckStatus, str]
     created_at: datetime
-    activated_at: Optional[datetime]
+    activated_at: Optional[datetime] = None
