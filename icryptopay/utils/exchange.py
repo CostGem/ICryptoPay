@@ -1,6 +1,6 @@
 from typing import List, Union
 
-from icryptopay.models.rates import ExchangeRate
+from icryptopay.types.rates import ExchangeRate
 
 
 def get_rate(source: str, target: str, rates: List[ExchangeRate]) -> ExchangeRate:

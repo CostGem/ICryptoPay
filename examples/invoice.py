@@ -3,7 +3,7 @@ from fastapi import FastAPI
 
 from icryptopay import ICryptoPay
 from icryptopay.enums.http import HTTPMethod
-from icryptopay.models.update import Update
+from icryptopay.types.update import Update
 
 app: FastAPI = FastAPI()
 crypto: ICryptoPay = ICryptoPay(

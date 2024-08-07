@@ -16,15 +16,15 @@ from icryptopay.enums.currency import CurrencyType
 from icryptopay.enums.http import HTTPMethod
 from icryptopay.enums.invoice import InvoiceStatus
 from icryptopay.enums.network import NetworkType
-from icryptopay.models.app_stats import AppStats
-from icryptopay.models.balance import Balance
-from icryptopay.models.check import Check
-from icryptopay.models.currencies import Currency
-from icryptopay.models.invoice import Invoice
-from icryptopay.models.profile import Profile
-from icryptopay.models.rates import ExchangeRate
-from icryptopay.models.transfer import Transfer
-from icryptopay.models.update import Update
+from icryptopay.types.app_stats import AppStats
+from icryptopay.types.balance import Balance
+from icryptopay.types.check import Check
+from icryptopay.types.currencies import Currency
+from icryptopay.types.invoice import Invoice
+from icryptopay.types.profile import Profile
+from icryptopay.types.rates import ExchangeRate
+from icryptopay.types.transfer import Transfer
+from icryptopay.types.update import Update
 from icryptopay.utils.exchange import get_rate, get_rate_summ
 
 
