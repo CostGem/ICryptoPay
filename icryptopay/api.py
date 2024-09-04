@@ -463,7 +463,7 @@ class ICryptoPay(BaseClient):
 
         return response["result"]
 
-    def verified_signature(self, body_text: str, crypto_pay_signature: str) -> bool:
+    def __verify_signature(self, body_text: str, crypto_pay_signature: str) -> bool:
         """
         Check the signature for webhook updates
         https://help.crypt.bot/crypto-pay-api#verifying-webhook-updates
@@ -483,20 +483,31 @@ class ICryptoPay(BaseClient):
 
     async def get_updates(self, request: Request) -> JSONResponse:
         """WebHook updates route"""
+        update: Optional[Update] = await self.verify_update(request=request)
 
-        body = await request.json()
+        if update:
+            for handler in self.__handlers:
+                handler(update)
+
+        return self.get_ok_response()
+
+    async def verify_update(self, request: Request) -> Optional[Update]:
+        """Verify Webhook update"""
+
+        body: Dict[str, Any] = await request.json()
         body_text: str = (await request.body()).decode("UTF-8")
         crypto_pay_signature: str = request.headers.get("Crypto-Pay-Api-Signature", "No value")
-        signature: bool = self.verified_signature(
+        signature: bool = self.__verify_signature(
             body_text=body_text,
             crypto_pay_signature=crypto_pay_signature
         )
 
         if signature:
-            for handler in self.__handlers:
-                await handler(Update(**body))
+            return Update(**body)
 
-            return JSONResponse(content={"msg": "Status OK!"})
+    @staticmethod
+    def get_ok_response() -> JSONResponse:
+        return JSONResponse(content={"msg": "Status OK!"})
 
     async def get_amount_by_fiat(
             self,
