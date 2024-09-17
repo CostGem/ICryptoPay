@@ -264,6 +264,32 @@ class ICryptoPay(BaseClient):
 
         return [Invoice(**invoice) for invoice in response["result"]["items"]]
 
+    async def get_invoice(self, invoice_id: int) -> Optional[Union[Invoice, List[Invoice]]]:
+        """
+        Use this method to get invoices of your app.
+        https://help.crypt.bot/crypto-pay-api#getInvoices
+
+        :param invoice_id: Invoice ID
+        """
+
+        invoice_ids = ",".join(map(str, [invoice_id]))
+
+        params: Dict[str, Union[str, int]] = {
+            "invoice_ids": invoice_ids,
+        }
+
+        response = await self._make_request(
+            method=HTTPMethod.GET,
+            url=self._build_request_url(method=APIMethod.GET_INVOICES),
+            params=params,
+            headers=self.__headers
+        )
+
+        if len(response["result"]["items"]) < 1:
+            return None
+
+        return Invoice(**response["result"]["items"][0])
+
     async def delete_invoice(self, invoice_id: int) -> bool:
         """
         Use this method to delete invoices created by your app.
