@@ -210,8 +210,6 @@ class ICryptoPay(BaseClient):
             if value is None:
                 del params[key]
 
-        print(params)
-
         response = await self._make_request(
             method=HTTPMethod.GET,
             url=self._build_request_url(method=APIMethod.CREATE_INVOICE),

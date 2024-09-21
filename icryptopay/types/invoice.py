@@ -14,7 +14,7 @@ class Invoice(BaseModel):
     invoice_id: int
     hash: str
     currency_type: Union[CurrencyType, Literal["crypto", "fiat"]]
-    asset: Optional[Union[Asset, str]] = None
+    asset: Optional[Union[Asset, float]] = None
     fiat: Optional[Union[FiatType, str]] = None
     amount: Union[int, float, str]
     paid_asset: Optional[Union[Asset, str]] = None
