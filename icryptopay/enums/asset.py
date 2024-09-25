@@ -16,6 +16,7 @@ class Asset(StrEnum):
     NOT: str = "NOT"
     MY: str = "MY"
     SOL: str = "SOL"
+    CATI: str = "CATI"
 
     @classmethod
     def values(cls):
