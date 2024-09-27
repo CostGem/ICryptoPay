@@ -17,6 +17,7 @@ class Asset(StrEnum):
     MY: str = "MY"
     SOL: str = "SOL"
     CATI: str = "CATI"
+    HMSTR: str = "HMSTR"
 
     @classmethod
     def values(cls):
