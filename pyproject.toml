@@ -1,0 +1,33 @@
+[tool.poetry]
+name = "ICryptoPay"
+version = "0.3.6"
+description = "@cryptobot api asynchronous python wrapper"
+authors = ["CostGem"]
+license = "MIT"
+readme = "README.md"
+repository = "https://github.com/CostGem/ICryptoPay"
+documentation = "https://help.crypt.bot/crypto-pay-api"
+keywords = [
+    "cryptobot",
+    "cryptopay",
+    "cryptopay api",
+    "cryptobot api",
+    "crypto api",
+    "api"
+]
+
+[tool.poetry.dependencies]
+python = "^3.8"
+aiohttp = "^3.8.3"
+certifi = "^2023.5.7"
+strenum = "^0.4.10"
+pydantic = "^2.8.2"
+fastapi = "^0.112.1"
+uvicorn = "^0.30.6"
+
+[tool.poetry.group.dev.dependencies]
+black = "^22.10.0"
+
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"
